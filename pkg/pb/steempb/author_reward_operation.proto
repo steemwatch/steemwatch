@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message AuthorRewardOperation {
+}

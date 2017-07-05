@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "operation_object.proto";
+
+message BlockOperations {
+    repeated OperationObject operations = 1;
+}

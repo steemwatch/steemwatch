@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message CommentOptionsOperation {
+    string author = 1;
+    string permlink = 2;
+    string max_accepted_payout = 3;
+    int32 percent_steem_dollars = 4;
+    bool allow_votes = 5;
+    bool allow_curation_rewards = 6;
+    CommentOptionsExtensions extensions = 7;
+}
+
+message CommentOptionsExtensions {
+    CommentPayoutBeneficiaries comment_payout_beneficiaries = 1;
+}
+
+message CommentPayoutBeneficiaries {
+    string account = 1;
+    uint32 weight = 2;
+}

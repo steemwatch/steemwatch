@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+message CommentOperation {
+    string parent_author = 1;
+    string parent_permlink = 2;
+    string author = 3;
+    string permlink = 4;
+    string title = 5;
+    string body = 6;
+    string json_metadata = 7 [(gogoproto.customname) = "JSONMetadata"];
+}

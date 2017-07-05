@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "price.proto";
+
+message FeedPublishOperation {
+    string publisher = 1;
+    Price exchange_rate = 2;
+}

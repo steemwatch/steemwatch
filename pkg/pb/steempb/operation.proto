@@ -1,0 +1,241 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+import "account_create_operation.proto";
+import "account_create_with_delegation_operation.proto";
+import "account_update_operation.proto";
+import "account_witness_proxy_operation.proto";
+import "account_witness_vote_operation.proto";
+import "author_reward_operation.proto";
+import "cancel_tranfer_from_savings_operation.proto";
+import "challenge_authority_operation.proto";
+import "change_recovery_account_operation.proto";
+import "claim_reward_balance_operation.proto";
+import "convert_operation.proto";
+import "comment_benefactor_reward_operation.proto";
+import "comment_operation.proto";
+import "comment_options_operation.proto";
+import "comment_payout_update_operation.proto";
+import "comment_reward_operation.proto";
+import "curation_reward_operation.proto";
+import "custom_binary_operation.proto";
+import "custom_json_operation.proto";
+import "custom_operation.proto";
+import "decline_voting_rights_operation.proto";
+import "delegate_vesting_shares_operation.proto";
+import "delete_comment_operation.proto";
+import "escrow_approve_operation.proto";
+import "escrow_dispute_operation.proto";
+import "escrow_release_operation.proto";
+import "escrow_transfer_operation.proto";
+import "feed_publish_operation.proto";
+import "fill_convert_request_operation.proto";
+import "fill_order_operation.proto";
+import "fill_transfer_from_savings_operation.proto";
+import "fill_vesting_withdraw_operation.proto";
+import "hardfork_operation.proto";
+import "interest_operation.proto";
+import "liquidity_reward_operation.proto";
+import "limit_order_cancel_operation.proto";
+import "limit_order_create_operation.proto";
+import "limit_order_create2_operation.proto";
+import "pow_operation.proto";
+import "pow2_operation.proto";
+import "producer_reward_operation.proto";
+import "prove_authority_operation.proto";
+import "recover_account_operation.proto";
+import "report_over_production_operation.proto";
+import "request_account_recovery_operation.proto";
+import "reset_account_operation.proto";
+import "return_vesting_delegation_operation.proto";
+import "shutdown_witness_operation.proto";
+import "set_reset_account_operation.proto";
+import "set_withdraw_vesting_route_operation.proto";
+import "transfer_operation.proto";
+import "transfer_from_savings_operation.proto";
+import "transfer_to_savings_operation.proto";
+import "transfer_to_vesting_operation.proto";
+import "vote_operation.proto";
+import "withdraw_vesting_operation.proto";
+import "witness_update_operation.proto";
+
+/*
+The following operations are still missing,
+i.e. the associated message declaration is empty:
+
+    account_create
+    account_create_with_delegation
+
+    witness_update
+
+    pow
+    pow2
+
+    custom
+    custom_binary
+
+    report_over_production
+
+    challenge_authority
+    prove_authority
+    request_account_recovery
+    recover_account
+    change_recovery_account
+    reset_account
+        
+    escrow_transfer
+    escrow_dispute
+    escrow_release
+    escrow_approve
+
+The following virtual operations are still missing,
+i.e. the associated message declaraton is empty:
+
+    fill_convert_request_operation,
+    author_reward_operation,
+    curation_reward_operation,
+    comment_reward_operation,
+    liquidity_reward_operation,
+    interest_operation,
+    fill_vesting_withdraw_operation,
+    fill_order_operation,
+    shutdown_witness_operation,
+    fill_transfer_from_savings_operation,
+    hardfork_operation,
+    comment_payout_update_operation,
+    return_vesting_delegation_operation,
+    comment_benefactor_reward_operation,
+    producer_reward_operation
+*/
+
+message Operation {
+    oneof operation {
+        // ---------------------------------------------------------------------
+        // Non-virtual operations
+        // --------------------------------------------------------------------
+
+        /*
+         * Account-related operations
+         */
+
+        AccountCreateOperation account_create = 1;
+        AccountCreateWithDelegationOperation account_create_with_delegation = 2;
+        AccountUpdateOperation account_update = 3;
+
+        ChallengeAuthorityOperation channel_authority = 4;
+        ProveAuthorityOperation prove_authority = 5;
+        RequestAccountRecoveryOperation request_account_recovery = 6;
+        RecoverAccountOperation recover_account = 7;
+        ChangeRecoveryAccountOperation change_recovery_account = 8;
+        ResetAccountOperation reset_account = 9;
+        SetResetAccountOperation set_reset_account = 10;
+
+        AccountWitnessVoteOperation account_witness_vote = 11;
+        AccountWitnessProxyOperation account_witness_proxy = 12;
+
+        DelegateVestingSharesOperation delegate_vesting_shares = 13;
+
+        DeclineVotingRightsOperation decline_voting_rights = 14;
+
+        // reserved 15 to 29;
+
+        /*
+         * Witness-related operations
+         */
+
+        WitnessUpdateOperation witness_update = 30;
+
+        FeedPublishOperation feed_publish = 31;
+
+        // reserved 32 to 39;
+
+        /*
+         * Mining-related operations
+         */
+
+        POWOperation pow = 40 [(gogoproto.customname) = "POW"];
+        POW2Operation pow2 = 41 [(gogoproto.customname) = "POW2"];
+
+        ReportOverProductionOperation report_over_production = 42;
+
+        // reserved 43 to 49;
+
+        /*
+         * Content-related operations
+         */
+
+        CommentOperation comment = 50;
+        CommentOptionsOperation comment_options = 51;
+        DeleteCommentOperation delete_comment = 52;
+
+        VoteOperation vote = 53;
+
+        ClaimRewardBalanceOperation claim_reward_balance = 54;
+
+        // reserved 55 to 69;
+
+        /*
+         * Custom operations
+         */
+
+        CustomOperation custom = 70;
+        CustomJSONOperation custom_json = 71 [(gogoproto.customname) = "CustomJSON"];
+        CustomBinaryOperation custom_binary = 72;
+
+        // reserved 73 to 79;
+
+        /*
+         * Monetary operations
+         */
+
+        TransferOperation transfer = 80;
+        TransferToVestingOperation transfer_to_vesting = 81;
+
+        WithdrawVestingOperation withdraw_vesting = 82;
+        SetWithdrawVestingRouteOperation set_withdraw_vesting_route = 83;
+
+        TransferToSavingsOperation transfer_to_savings = 84;
+        TransferFromSavingsOperation transfer_from_savings = 85;
+        CancelTransferFromSavingsOperation cancel_transfer_from_savings = 86;
+
+        ConvertOperation convert = 87;
+
+        LimitOrderCreateOperation limit_order_create = 88;
+        LimitOrderCreate2Operation limit_order_create2 = 99;
+        LimitOrderCancelOperation limit_order_cancel = 90;
+        
+        EscrowTransferOperation escrow_transfer = 91;
+        EscrowDisputeOperation escrow_dispute = 92;
+        EscrowReleaseOperation escrow_release = 93;
+        EscrowApproveOperation escrow_approve = 94;
+
+        // reserved 95 to 99;
+
+        // ---------------------------------------------------------------------
+        // Virtual operations
+        //
+        // These are for now unsorted in any way.
+        // The order will be subject to change.
+        // ---------------------------------------------------------------------
+
+        FillConvertRequestOperation fill_convert_request = 100;
+        AuthorRewardOperation author_reward = 101;
+        CurationRewardOperation curation_reward = 102;
+        CommentRewardOperation comment_reward = 103;
+        LiquidityRewardOperation liquidity_reward = 104;
+        InterestOperation interest = 105;
+        FillVestingWithdrawOperation fill_vesting_withdraw = 106;
+        FillOrderOperation fill_order = 107;
+        ShutdownWitnessOperation shutdown_witness = 108;
+        FillTransferFromSavingsOperation fill_transfer_from_savings = 109;
+        HardforkOperation hardfork = 110;
+        CommentPayoutUpdateOperation comment_payout_update = 111;
+        ReturnVestingDelegationOperation return_vesting_delegation = 112;
+        CommentBenefactorRewardOperation reward_benefactor_reward = 113;
+        ProducerRewardOperation producer_reward = 114;
+    }
+}

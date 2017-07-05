@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+import "operation.proto";
+
+message OperationObject {
+    uint32 block_number = 1;
+    string transaction_id = 2 [(gogoproto.customname) = "TransactionID"];
+    uint32 transaction_in_block = 3;
+    Operation operation = 4;
+    uint32 operation_in_transaction = 5;
+    uint64 virtual_operation = 6;
+    google.protobuf.Timestamp timestamp = 7;
+}

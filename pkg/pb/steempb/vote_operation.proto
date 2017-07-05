@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message VoteOperation {
+    string author = 1;
+    string permlink = 2;
+    string voter = 3;
+    int32 weight = 4;
+}

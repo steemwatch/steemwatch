@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message TransferOperation {
+    string from = 1;
+    string to = 2;
+    string amount = 3;
+    string memo = 4;
+}

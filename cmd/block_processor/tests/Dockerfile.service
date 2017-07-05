@@ -1,0 +1,7 @@
+FROM jwilder/dockerize
+
+COPY build/block_processor_entrypoint /
+
+CMD ["dockerize", "-wait", "tcp://steemd:80", \
+                  "-wait", "tcp://stan:4222", \
+                  "/block_processor_entrypoint"]

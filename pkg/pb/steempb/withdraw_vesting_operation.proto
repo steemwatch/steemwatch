@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message WithdrawVestingOperation {
+    string account = 1;
+    string vesting_shares = 2;
+}

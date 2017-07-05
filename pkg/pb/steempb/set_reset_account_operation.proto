@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message SetResetAccountOperation {
+    string account = 1;
+    string current_reset_account = 2;
+    string reset_account = 3;
+}

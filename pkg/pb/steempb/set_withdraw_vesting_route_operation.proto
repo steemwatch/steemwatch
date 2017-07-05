@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message SetWithdrawVestingRouteOperation {
+    string from_account = 1;
+    string to_account = 2;
+    uint32 percent = 3;
+    bool auto_vest = 4;
+}

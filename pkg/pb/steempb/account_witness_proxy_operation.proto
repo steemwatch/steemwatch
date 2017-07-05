@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message AccountWitnessProxyOperation {
+    string account = 1;
+    string proxy = 2;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message DelegateVestingSharesOperation {
+    string delegator = 1;
+    string delegatee = 2;
+    string vesting_shares = 3;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message Price {
+    string base = 1;
+    string quote = 2;
+}

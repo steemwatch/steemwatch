@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+message LimitOrderCreateOperation {
+    string owner = 1;
+    uint32 order_id = 2 [(gogoproto.customname) = "OrderID"];
+    string amount_to_sell = 3;
+    string min_to_receive = 4;
+    bool fill_or_kill = 5;
+    google.protobuf.Timestamp expiration = 6;
+}

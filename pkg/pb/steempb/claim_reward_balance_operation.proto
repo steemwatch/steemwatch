@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+message ClaimRewardBalanceOperation {
+    string account = 1;
+    string reward_sbd = 2 [(gogoproto.customname) = "RewardSBD"];
+    string reward_steem = 3 [(gogoproto.customname) = "RewardSTEEM"];
+    string reward_vests = 4;
+}

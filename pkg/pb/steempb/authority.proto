@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+message Authority {
+    uint32 weight_threshold = 1;
+    // typedef flat_map< account_name_type, weight_type > account_authority_map;
+    //
+    // account_authority_map account_auths;
+    map<string, int64> account_auths = 2;
+    // typedef flat_map< public_key_type, weight_type > key_authority_map;
+    //
+    // key_authority_map key_auths;
+    map<string, int64> key_auths = 3;
+}

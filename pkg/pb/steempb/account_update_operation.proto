@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+import "authority.proto";
+
+message AccountUpdateOperation {
+    string account = 1;
+    Authority owner = 2;
+    Authority active = 3;
+    Authority posting = 4;
+    string memo_key = 5;
+    string json_metadata = 6 [(gogoproto.customname) = "JSONMetadata"]; 
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package steemwatch.steem;
+option go_package = "steempb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+message TransferFromSavingsOperation {
+    string from = 1;
+    uint32 request_id = 2 [(gogoproto.customname) = "RequestID"];
+    string to = 3;
+    string amount = 4;
+    string memo = 5;
+}
