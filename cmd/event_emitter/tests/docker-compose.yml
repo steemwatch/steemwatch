@@ -1,0 +1,34 @@
+version: '3.1'
+
+services:
+    test_runner:
+        build: .
+        environment:
+            STAN_URL: 'nats://stan:4222'
+            STAN_CLUSTER_ID: steemwatch
+            STAN_CLIENT_ID: test_runner
+            STAN_OUTPUT_SUBJECT: 'steem.block_operations'
+        depends_on:
+            - block_processor
+
+    block_processor:
+        build:
+            context: '../'
+            dockerfile: 'tests/Dockerfile.service'
+        environment:
+            LOG_LEVEL: debug
+            STEEMD_RPC_ENDPOINT_ADDRESS: 'ws://steemd'
+            STAN_URL: 'nats://stan:4222'
+        depends_on:
+            - steemd
+            - stan
+
+    steemd:
+      build:
+        context: './steemd'
+      environment:
+        STEEMD_RPC_ENDPOINT_ADDRESS: '0.0.0.0:80'
+
+    stan:
+      image: nats-streaming
+      command: ['--cluster_id', 'steemwatch']
