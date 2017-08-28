@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package steemwatch;
+option go_package = "pb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+import "steempb/vote_operation.proto";
+
+message StoryVotedEvent {
+    steemwatch.steem.VoteOperation operation = 1;
+
+    string title = 2;
+    string url = 3 [(gogoproto.customname) = "URL"];
+    string pending_payout = 4;
+}

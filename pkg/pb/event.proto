@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package steemwatch;
+option go_package = "pb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+import "comment_voted_event.proto";
+import "story_voted_event.proto";
+
+message Event {
+    oneof event {
+        StoryVotedEvent story_voted = 1;
+        CommentVotedEvent comment_voted = 2;
+    }
+}
