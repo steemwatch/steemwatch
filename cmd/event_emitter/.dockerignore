@@ -1,3 +1,3 @@
 build
-!build/block_processor_entrypoint
+!build/event_emitter_entrypoint
 tests

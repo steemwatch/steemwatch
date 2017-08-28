@@ -3,6 +3,9 @@ package main
 import (
 	"context"
 
+	"github.com/gogo/protobuf/proto"
+	"github.com/steemwatch/steemwatch/pkg/pb/steempb"
+
 	stan "github.com/nats-io/go-nats-streaming"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -34,72 +37,87 @@ func NewEventEmitter(
 	}
 }
 
-func (ee *EventEmitter) Start() error {
-	ee.t.Go(func() error {
-		ee.logger.Info("started")
-		defer ee.logger.Info("terminated")
+func (srv *EventEmitter) Start() error {
+	srv.t.Go(func() error {
+		srv.logger.Info("started")
+		defer srv.logger.Info("terminated")
 
 		sc, err := stan.Connect(
-			ee.config.STANClusterID,
-			ee.config.STANClientID,
-			stan.NatsURL(ee.config.STANURL),
-			stan.ConnectWait(ee.config.STANConnectWait),
-			stan.PubAckWait(ee.config.STANPubAckWait),
+			srv.config.STANClusterID,
+			srv.config.STANClientID,
+			stan.NatsURL(srv.config.STANURL),
+			stan.ConnectWait(srv.config.STANConnectWait),
+			stan.PubAckWait(srv.config.STANPubAckWait),
 		)
 		if err != nil {
-			return ee.nuked(
+			return srv.nuked(
 				err, "failed to connect to STAN",
-				zap.String("url", ee.config.STANURL),
-				zap.String("cluster_id", ee.config.STANClusterID),
-				zap.String("client_id", ee.config.STANClientID),
+				zap.String("url", srv.config.STANURL),
+				zap.String("cluster_id", srv.config.STANClusterID),
+				zap.String("client_id", srv.config.STANClientID),
 				zap.Error(err),
 			)
 		}
 
-		ee.logger.Info(
+		srv.logger.Info(
 			"connected to STAN",
-			zap.String("url", ee.config.STANURL),
-			zap.String("cluster_id", ee.config.STANClusterID),
-			zap.String("client_id", ee.config.STANClientID),
+			zap.String("url", srv.config.STANURL),
+			zap.String("cluster_id", srv.config.STANClusterID),
+			zap.String("client_id", srv.config.STANClientID),
 		)
 
 		if _, err := sc.QueueSubscribe(
-			ee.config.STANInputSubject,
-			ee.config.ServiceName,
-			ee.handleMessage,
-			stan.DurableName(ee.config.ServiceName),
+			srv.config.STANInputSubject,
+			srv.config.ServiceName,
+			srv.handleMessage,
+			stan.DurableName(srv.config.ServiceName),
 		); err != nil {
-			return ee.nuked(
+			return srv.nuked(
 				err, "failed to subscribe to the input subject",
-				zap.String("subject", ee.config.STANInputSubject),
+				zap.String("subject", srv.config.STANInputSubject),
 			)
 		}
 
 		// Wait for the termination signal.
-		<-ee.t.Dying()
+		<-srv.t.Dying()
 
 		if err := sc.Close(); err != nil {
-			ee.nuked(err, "failed to close STAN connection")
+			srv.nuked(err, "failed to close STAN connection")
 		}
 		return nil
 	})
 	return nil
 }
 
-func (ee *EventEmitter) Stop(ctx context.Context) error {
-	ee.t.Kill(nil)
+func (srv *EventEmitter) Stop(ctx context.Context) error {
+	srv.t.Kill(nil)
 	return nil
 }
 
-func (ee *EventEmitter) Wait() error {
-	return ee.t.Wait()
+func (srv *EventEmitter) Wait() error {
+	return srv.t.Wait()
 }
 
-func (ee *EventEmitter) handleMessage(msg *stan.Msg) {
+func (srv *EventEmitter) handleMessage(msg *stan.Msg) {
+	var ops steempb.BlockOperations
+	if err := proto.Unmarshal(msg.Data, &ops); err != nil {
+		srv.t.Kill(srv.nuked(err, "failed to unmarshal message data"))
+		return
+	}
 
+	for _, op := range ops.GetOperations() {
+		data, err := proto.Marshal(harvest(op.GetOperation()))
+		if err != nil {
+			srv.t.Kill(srv.nuked(err, "failed to marshal event object"))
+		}
+	}
+
+	if err := msg.Ack(); err != nil {
+		srv.t.Kill(srv.nuked(err, "failed to ACK input message"))
+	}
 }
 
-func (ee *EventEmitter) nuked(
+func (srv *EventEmitter) nuked(
 	err error,
 	msg string,
 	fields ...zapcore.Field,
@@ -108,6 +126,6 @@ func (ee *EventEmitter) nuked(
 		return nil
 	}
 
-	ee.logger.Error(msg, append(fields, zap.Error(err))...)
+	srv.logger.Error(msg, append(fields, zap.Error(err))...)
 	return errors.Wrap(err, msg)
 }

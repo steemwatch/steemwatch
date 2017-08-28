@@ -15,7 +15,7 @@ import (
 )
 
 // Version contains the service version and is set at build time.
-var Version = ""
+var Version string
 
 func main() {
 	if err := run(); err != nil {
@@ -86,19 +86,19 @@ func run() error {
 	})
 
 	// Start the service.
-	ee := NewEventEmitter(logger, config)
+	service := NewEventEmitter(logger, config)
 	t.Go(func() error {
-		if err := ee.Start(); err != nil {
+		if err := service.Start(); err != nil {
 			return err
 		}
 
 		t.Go(func() error {
 			<-t.Dying()
-			ee.Stop(nil)
+			service.Stop(nil)
 			return nil
 		})
 
-		return ee.Wait()
+		return service.Wait()
 	})
 
 	// Wait until all threads are done.
