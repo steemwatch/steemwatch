@@ -154,7 +154,7 @@ func run() error {
 	})
 
 	transport, err := websocket.NewTransport(
-		config.SteemdRPCEndpointAddress,
+		[]string{config.SteemdRPCEndpointAddress},
 		websocket.SetAutoReconnectEnabled(true),
 		websocket.SetAutoReconnectMaxDelay(config.SteemdMaxReconnectDelay),
 		websocket.SetDialTimeout(config.SteemdDialTimeout),

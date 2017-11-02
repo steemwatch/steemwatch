@@ -75,7 +75,7 @@ func (bp *BlockProcessor) Start() error {
 	})
 
 	bp.t.Go(func() error {
-		return bp.committed(bp.logger.Named("committer"), commitCh)
+		return bp.committer(bp.logger.Named("committer"), commitCh)
 	})
 
 	bp.logger.Info("started")
@@ -247,7 +247,7 @@ func (bp *BlockProcessor) publisher(
 	return nil
 }
 
-func (bp *BlockProcessor) committed(
+func (bp *BlockProcessor) committer(
 	logger *zap.Logger,
 	commitCh <-chan uint32,
 ) error {

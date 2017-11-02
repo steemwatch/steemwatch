@@ -4,7 +4,7 @@ build:
 	go build -o build/block_processor
 
 test:
-	cd tests && ./run.sh
+	cd tests && ./run.bash
 
 docker/exe:
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o build/block_processor_entrypoint

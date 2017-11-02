@@ -35,6 +35,11 @@ func main() {
 				Value: false,
 				Usage: "print raw RPC responses",
 			},
+			&cli.BoolFlag{
+				Name:  "monitor",
+				Value: false,
+				Usage: "monitor the WebSocket connection",
+			},
 		},
 		Action: run,
 	}
@@ -49,7 +54,19 @@ func run(ctx *cli.Context) error {
 		raw          = ctx.Bool("raw")
 	)
 
-	transport, err := websocket.NewTransport(endpoint)
+	var opts []websocket.Option
+	if ctx.Bool("monitor") {
+		monitorCh := make(chan interface{}, 1)
+		go func() {
+			for e := range monitorCh {
+				fmt.Fprintf(os.Stderr, "WebSocket: %v\n", e)
+			}
+		}()
+
+		opts = append(opts, websocket.SetMonitor(monitorCh))
+	}
+
+	transport, err := websocket.NewTransport([]string{endpoint}, opts...)
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize Steem RPC transport")
 	}
