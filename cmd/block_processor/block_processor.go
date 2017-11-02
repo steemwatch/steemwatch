@@ -96,8 +96,7 @@ func (bp *BlockProcessor) Wait() error {
 	return err
 }
 
-// fetcher is a background goroutine that handles fetching of Steem blocks
-// and committing block numbers that has already been processed.
+// fetcher takes care of fetching Steem blockchain blocks.
 func (bp *BlockProcessor) fetcher(
 	logger *zap.Logger,
 	outputCh chan<- []*types.OperationObject,
@@ -181,6 +180,8 @@ func (bp *BlockProcessor) fetcher(
 	}
 }
 
+// convertor accepts go-steem operation objects
+// and turns them into our Protocol Buffers representation.
 func (bp *BlockProcessor) convertor(
 	logger *zap.Logger,
 	inputCh <-chan []*types.OperationObject,
@@ -205,6 +206,7 @@ func (bp *BlockProcessor) convertor(
 	return nil
 }
 
+// publisher accepts Protocol Buffer objects and writes them into the selected STAN channel.
 func (bp *BlockProcessor) publisher(
 	logger *zap.Logger,
 	inputCh <-chan []*steempb.OperationObject,
